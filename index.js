@@ -102,6 +102,7 @@ const helicopterSprite = {
 function setUpWorld() {
     // Clear the old bodies from the world
     Composite.clear(engine.world, false);
+    Engine.clear(engine);
 
     lowerWalls = [];
     upperWalls = [];
@@ -242,7 +243,7 @@ Events.on(engine, 'beforeUpdate', function(event) {
     Composite.add(engine.world, heli_particles[heli_particles.length - 1]);
     
     // Update the time panel
-    const totalSeconds = Math.round(event.timestamp / 1000);
+    const totalSeconds = Math.round(engine.timing.timestamp / 1000);
     const hours = Math.round(totalSeconds / 3600);
     const rem = (totalSeconds % 3600);
     const minutes = Math.round(rem / 60);
@@ -277,6 +278,8 @@ Events.on(engine, "collisionStart", function(event) {
             // the other object has to be a helicopter
             if(pair.bodyA.label === "wall" || pair.bodyB.label === "wall") {
                 Runner.stop(runner);
+                // Reset engine simulation time
+                engine.timing.timestamp = 0;
 
                 // Show the game over menu
                 document.querySelector("#game-over-menu").style.zIndex = 1;
