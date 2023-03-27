@@ -38,3 +38,9 @@ body {
     /* Negative z-index will put it behind canvas, thus will hide it */
     z-index: -1;
 }
+
+@media (max-width: 499px) {
+    .menu-screen h1 {
+        font-size: 2.5em;
+    }
+}

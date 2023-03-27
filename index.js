@@ -29,10 +29,18 @@ Render.run(render);
 const runner = Runner.create();
 
 
+let screenWideDim;
+
+if(window.innerWidth > window.innerHeight) {
+    screenWideDim = window.innerWidth;
+} else {
+    screenWideDim = window.innerHeight;
+}
+
 const rectCount = 21;
-const rectWidth = window.innerWidth * 0.05;
+const rectWidth = screenWideDim * 0.05;
 const rectHeight = window.innerHeight * 0.4;
-const floatingRectWidth = window.innerWidth * 0.03;
+const floatingRectWidth = screenWideDim * 0.03;
 const floatingRectHeight = window.innerHeight * 0.15;
 const rectX = 0;
 const wallDeleteLimitX = -50;
@@ -40,7 +48,7 @@ const helicopterVelocityY = 450;
 const lowerWallOffsetY = 0.07;
 const upperWallOffsetY = 0.05;
 const wallVelocityX = 350;
-const helicopterDim = window.innerWidth * 0.03;
+const helicopterDim = screenWideDim * 0.03;
 
 // These are categories arbitrary categories for collision filtering. This is needed for making
 // the helicopter not draggable by mouse
