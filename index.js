@@ -19,7 +19,8 @@ const render = Render.create({
     options: {
         width: window.innerWidth,
         height: window.innerHeight,
-        wireframes: false
+        wireframes: false,
+        background: "#16092a"
     }
 });
 
@@ -85,6 +86,19 @@ let helicopter;
 // This array will contain helicopter particle objects
 let heli_particles = [];
 
+// Helicopter sprite configurations
+// This will hold the number of engine 'ticks'. This will be used for knowing when to update the sprite
+let engineTick = 0;
+
+let helicopterSpriteChangeFlag = false;
+
+const helicopterSprite = {
+    texture: "assets/helicopter-1.png",
+    xScale: 0.3,
+    yScale: 0.35
+};
+
+
 function setUpWorld() {
     // Clear the old bodies from the world
     Composite.clear(engine.world, false);
@@ -116,7 +130,7 @@ function setUpWorld() {
     helicopter = Bodies.rectangle(window.innerWidth/2, 
                                   window.innerHeight/2, 
                                   helicopterDim, helicopterDim, 
-                                  { label: "helicopter", collisionFilter: { category: helicopterCategory, mask: wallCategory } });
+                                  { label: "helicopter", collisionFilter: { category: helicopterCategory, mask: wallCategory }, render: { sprite: helicopterSprite } });
 
     // Add all of the bodies to the world
     Composite.add(engine.world, [...lowerWalls]);
@@ -223,7 +237,7 @@ Events.on(engine, 'beforeUpdate', function(event) {
     }
 
     // Add new particle
-    heli_particles.push(Bodies.circle(helicopter.position.x - (helicopterDim * 0.5) - 10, helicopter.position.y, helicopterDim * 0.1, { label: "particle", collisionFilter: { category: particleCategory,  mask: particleCategory }, render: { fillStyle: particleColor, opacity: 0.5 } }));
+    heli_particles.push(Bodies.circle(helicopter.position.x - (helicopterDim * 0.5) - 10, helicopter.position.y, helicopterDim * 0.05, { label: "particle", collisionFilter: { category: particleCategory,  mask: particleCategory }, render: { fillStyle: particleColor, opacity: 0.5 } }));
 
     Composite.add(engine.world, heli_particles[heli_particles.length - 1]);
     
@@ -235,6 +249,23 @@ Events.on(engine, 'beforeUpdate', function(event) {
     const seconds = rem % 60;
 
     document.querySelector("#time-panel").innerHTML = `${hours}h:${minutes}m:${seconds}s`;
+
+    // Change helicopter sprite
+    engineTick++;
+
+    // Update sprite in every 7 ticks
+    if(engineTick >= 7) {
+        if(helicopterSpriteChangeFlag) {
+            helicopter.render.sprite.texture = "assets/helicopter-2.png";
+        } else {
+            helicopter.render.sprite.texture = "assets/helicopter-1.png";
+        }
+
+        helicopterSpriteChangeFlag = !helicopterSpriteChangeFlag;
+
+        // Reset engine tick
+        engineTick = 0;
+    }
 });
 
 // This event is invoked when any collision has just occured
