@@ -18,7 +18,8 @@ const render = Render.create({
     engine: engine,
     options: {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
+        wireframes: false
     }
 });
 
@@ -49,6 +50,7 @@ const lowerWallOffsetY = 0.07;
 const upperWallOffsetY = 0.05;
 const wallVelocityX = 350;
 const helicopterDim = screenWideDim * 0.03;
+const wallColor = "#772323";
 
 // These are categories arbitrary categories for collision filtering. This is needed for making
 // the helicopter not draggable by mouse
@@ -99,7 +101,7 @@ function setUpWorld() {
                                         window.innerHeight - Math.floor(Math.random() * (window.innerHeight * lowerWallOffsetY)), 
                                         rectWidth, 
                                         rectHeight, 
-                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory } }));
+                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory }, render: { fillStyle: wallColor, strokeStyle: wallColor, lineWidth: 1 } }));
     }
 
     for(let i = 0; i < rectCount; i++) {
@@ -107,7 +109,7 @@ function setUpWorld() {
                                         0 + Math.floor(Math.random() * (window.innerHeight * upperWallOffsetY)), 
                                         rectWidth, 
                                         rectHeight, 
-                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory } }));
+                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory }, render: { fillStyle: wallColor, strokeStyle: wallColor, lineWidth: 1 } }));
     }
 
     helicopter = Bodies.rectangle(window.innerWidth/2, 
@@ -190,7 +192,7 @@ Events.on(engine, 'beforeUpdate', function(event) {
                                         window.innerHeight - Math.floor(Math.random() * (window.innerHeight * lowerWallOffsetY)), 
                                         rectWidth, 
                                         rectHeight, 
-                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory } }));
+                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory }, render: { fillStyle: wallColor, strokeStyle: wallColor, lineWidth: 1 } }));
 
         Composite.add(engine.world, lowerWalls[lowerWalls.length - 1]);
     }
@@ -200,14 +202,14 @@ Events.on(engine, 'beforeUpdate', function(event) {
                                         0 + Math.floor(Math.random() * (window.innerHeight * upperWallOffsetY)), 
                                         rectWidth, 
                                         rectHeight, 
-                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory } }));
+                                        { label: "wall", isStatic: true, collisionFilter: { category: wallCategory }, render: { fillStyle: wallColor, strokeStyle: wallColor, lineWidth: 1 } }));
 
         Composite.add(engine.world, upperWalls[upperWalls.length - 1]);
     }
 
     if(Math.floor(Math.random() * 70) === 5) {
         // This x position gives good spacing between walls. Determined through trial and error
-        floatingWalls.push(Bodies.rectangle(window.innerWidth + (window.innerWidth * 0.1) + (floatingWalls.length * floatingRectWidth), (window.innerHeight / 2) + (Math.random() * (window.innerHeight * 0.02)), floatingRectWidth, floatingRectHeight, { label: "wall", isStatic: true, collisionFilter: { category: wallCategory } }));
+        floatingWalls.push(Bodies.rectangle(window.innerWidth + (window.innerWidth * 0.1) + (floatingWalls.length * floatingRectWidth), (window.innerHeight / 2) + (Math.random() * (window.innerHeight * 0.02)), floatingRectWidth, floatingRectHeight, { label: "wall", isStatic: true, collisionFilter: { category: wallCategory }, render: { fillStyle: wallColor } }));
         Composite.add(engine.world, floatingWalls[floatingWalls.length - 1]);
     }
 
