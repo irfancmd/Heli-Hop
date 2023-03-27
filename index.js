@@ -51,6 +51,7 @@ const upperWallOffsetY = 0.05;
 const wallVelocityX = 350;
 const helicopterDim = screenWideDim * 0.03;
 const wallColor = "#772323";
+const particleColor = "#90A4AE";
 
 // These are categories arbitrary categories for collision filtering. This is needed for making
 // the helicopter not draggable by mouse
@@ -222,7 +223,7 @@ Events.on(engine, 'beforeUpdate', function(event) {
     }
 
     // Add new particle
-    heli_particles.push(Bodies.circle(helicopter.position.x - (helicopterDim * 0.5) - 10, helicopter.position.y, helicopterDim * 0.1, { label: "particle", collisionFilter: { category: particleCategory,  mask: particleCategory } }));
+    heli_particles.push(Bodies.circle(helicopter.position.x - (helicopterDim * 0.5) - 10, helicopter.position.y, helicopterDim * 0.1, { label: "particle", collisionFilter: { category: particleCategory,  mask: particleCategory }, render: { fillStyle: particleColor, opacity: 0.5 } }));
 
     Composite.add(engine.world, heli_particles[heli_particles.length - 1]);
     
