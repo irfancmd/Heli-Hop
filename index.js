@@ -94,8 +94,8 @@ let helicopterSpriteChangeFlag = false;
 
 const helicopterSprite = {
     texture: "assets/helicopter-1.png",
-    xScale: 0.3,
-    yScale: 0.35
+    xScale: screenWideDim * 0.00012,
+    yScale: screenWideDim * 0.00017,
 };
 
 
