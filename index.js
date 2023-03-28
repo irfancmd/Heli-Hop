@@ -142,15 +142,6 @@ function setUpWorld() {
     Composite.add(engine.world, mouseConstraint);
 }
 
-// Defining mouse events
-Events.on(mouseConstraint, "mousedown", function(event) {
-    const timeScale = (event.delta || (1000 / 60)) / 1000;
-
-    Body.setVelocity(helicopter, {x: 0, y: -(helicopterVelocityY * timeScale)});
-    heli_particles.forEach(particle => {
-        Body.setVelocity(particle, {x: 0, y: -(helicopterVelocityY * timeScale)});
-    });
-});
 
 // This event is invoked before rendering a frame
 Events.on(engine, 'beforeUpdate', function(event) {
@@ -269,6 +260,21 @@ Events.on(engine, 'beforeUpdate', function(event) {
     }
 });
 
+// This event will be called when left/right mouse button is down
+Events.on(mouseConstraint, "mousedown", function(event) {
+    const timeScale = (event.delta || (1000 / 60)) / 1000;
+
+    Body.setVelocity(helicopter, {x: 0, y: -(helicopterVelocityY * timeScale)});
+    heli_particles.forEach(particle => {
+        Body.setVelocity(particle, {x: 0, y: -(helicopterVelocityY * timeScale)});
+    });
+
+    // Play helicopter sound
+    // Seek the audio to the beginning before playing again
+    document.querySelector("#helicopter-audio").currentTime = 0;
+    document.querySelector("#helicopter-audio").play();
+});
+
 // This event is invoked when any collision has just occured
 Events.on(engine, "collisionStart", function(event) {
     if(event.pairs.length > 0) {
@@ -277,7 +283,17 @@ Events.on(engine, "collisionStart", function(event) {
             // Collision filters are set up in a way that walls will only interact with helicopter category. So, if any collision involves a wall,
             // the other object has to be a helicopter
             if(pair.bodyA.label === "wall" || pair.bodyB.label === "wall") {
+                // Play explosion audio
+                document.querySelector("#explosion-audio").currentTime = 0.5;
+                document.querySelector("#explosion-audio").play();
+
+                // Stop background audio
+                document.querySelector("#helicopter-audio").pause();
+                document.querySelector("#helicopter-audio").currentTime = 0;
+
+                // Stop the runner (putting this above audios was slowing them down so putting it here)
                 Runner.stop(runner);
+
                 // Reset engine simulation time
                 engine.timing.timestamp = 0;
 
@@ -289,10 +305,9 @@ Events.on(engine, "collisionStart", function(event) {
 });
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() { 
     // Setting the world up before starting the game gives a nice blurry view
     // of the world in the start menu
-
     setUpWorld();
 
     document.querySelector("#button-start").addEventListener("click", function() {
